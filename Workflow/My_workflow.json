@@ -1,0 +1,1316 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -740,
+        -180
+      ],
+      "id": "298e3ab5-01d0-49a3-9d82-59db97fef9b5",
+      "name": "Telegram Trigger",
+      "webhookId": "c89a193c-b6d5-42a3-abeb-ca36d1855bb0",
+      "credentials": {
+        "telegramApi": {
+          "id": "e6n8nDyW93RogvL9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f5dcecd1-560f-4057-bcc5-0422cb094c4e",
+                    "leftValue": "={{$json[\"message\"][\"text\"]}}",
+                    "rightValue": "^(خلاصه کن|ترجمه کن|سوال بپرس)$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.document.mime_type }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c5f75795-3796-478c-925b-8bfe178eb5f9"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d7f74fc8-434b-41ce-8025-48112452cb46",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "=/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -440,
+        -200
+      ],
+      "id": "cadf6be6-afe8-4005-87e4-67fbbe018372",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.document.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        20,
+        120
+      ],
+      "id": "1ef8d28d-0496-4e9b-ab0d-66da0a6f913c",
+      "name": "Telegram",
+      "webhookId": "fb9897e3-2721-491b-a3b6-5194d4049a52",
+      "credentials": {
+        "telegramApi": {
+          "id": "e6n8nDyW93RogvL9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.download_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        120
+      ],
+      "id": "983e8dca-4025-48cb-b177-fe68ee7f69cf",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      download_url: `https://api.telegram.org/file/bot7706987792:AAETbZcUzLktd5sfAcNjGcWYPvDeeXpy0Wg/${$json[\"result\"][\"file_path\"]}`\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        320
+      ],
+      "id": "aa5e97bf-f893-4238-9eae-ed49b4fe0570",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "Convert from PDF",
+        "url": "={{ $json.download_url }}",
+        "advancedOptions": {}
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "id": "8dc8bef5-2426-4276-98b2-b88c29e74854",
+      "name": "PDFco Api",
+      "credentials": {
+        "pdfcoApi": {
+          "id": "ERv3EnJPavL824cX",
+          "name": "PDF.co account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        580,
+        120
+      ],
+      "id": "027d5bcb-4d15-4777-acd5-b4b329acfe32",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "13715a7f-3c50-41b5-9279-98c3d8cc8bab",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        120
+      ],
+      "id": "cbdfa1d2-b565-42d2-9e36-d8b11f638751",
+      "name": "If",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "K81245215288957"
+            },
+            {
+              "name": "language",
+              "value": "auto"
+            },
+            {
+              "name": "OCREngine",
+              "value": "2"
+            },
+            {
+              "name": "isOverlayRequired",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "97d5f971-e1bc-40e8-ada0-7b71ae79b39c",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=شما یک دستیار هوشمند برای پردازش و تحلیل اسناد هستید.\n\nدستور کار:\n{{ $item(\"1\").$node[\"Edit Fields2\"].json[\"instruction\"] }}\n\nمتن کامل سند:\n{{ $item(\"2\").$node[\"Edit Fields2\"].json[\"data\"] }}\n\n\n{% if $json[\"question\"] %}\nکاربر همچنین یک سوال مشخص پرسیده است:\n{{ $item(\"0\").$node[\"Edit Fields2\"].json[\"question\"] }}\nلطفاً به این سوال بر اساس محتوای سند پاسخ دهید.\n{% else %}\nلطفاً دستور فوق را بر روی محتوای سند اجرا کنید.\n{% endif %}\n\nدر پاسخ خود، نتیجه را به صورت واضح، دقیق و به زبان مناسب ارائه دهید\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        -640
+      ],
+      "id": "1539e8cb-de6a-48fe-896c-8d8283406c95",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "سلام.خوش آمدید.یک PDF ارسال کنید تا گزینه ها را به شما نمایش دهم.",
+        "replyMarkup": "replyKeyboardRemove",
+        "replyKeyboardRemove": {
+          "remove_keyboard": true
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -760,
+        240
+      ],
+      "id": "8de7631b-a220-47fe-be19-6a36ad9290a7",
+      "name": "Telegram1",
+      "webhookId": "f00c7a46-ff0a-48e8-986a-f8dcb6a6dc12",
+      "credentials": {
+        "telegramApi": {
+          "id": "e6n8nDyW93RogvL9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=حالا میخواهی با این پی دی اف چه کنی؟",
+        "replyMarkup": "replyKeyboard",
+        "replyKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "=خلاصه کن",
+                    "additionalFields": {}
+                  },
+                  {
+                    "text": "ترجمه کن",
+                    "additionalFields": {}
+                  },
+                  {
+                    "text": "سوال بپرس",
+                    "additionalFields": {}
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "replyKeyboardOptions": {},
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        -60
+      ],
+      "id": "aae1a223-03a2-4da8-9182-22ef56a883a9",
+      "name": "Telegram2",
+      "webhookId": "16d0c753-efe6-4a67-8f02-ca2da98ebd09",
+      "credentials": {
+        "telegramApi": {
+          "id": "e6n8nDyW93RogvL9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4c8e0079-d1cb-41a2-b95f-9ef0db3d72d9",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "سوال بپرس",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -100,
+        -480
+      ],
+      "id": "75ead756-ba2e-4799-b05e-35213583fca3",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1tcnRDn_jpDUm_6lqjkB2Prud0clax4OV4m2opvTFz_M",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tcnRDn_jpDUm_6lqjkB2Prud0clax4OV4m2opvTFz_M/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "data": "={{ $json.data }}",
+            "chat_id": "={{ $json[\"chat_id\"] }}"
+          },
+          "matchingColumns": [
+            "chat_id"
+          ],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1700,
+        40
+      ],
+      "id": "adfd365b-39f6-421b-bd16-8772853705ea",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Hc7cKFfnih9aDikz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1180,
+        -40
+      ],
+      "id": "5347c61c-7138-4ac3-8ebf-ac526b3f755b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tcnRDn_jpDUm_6lqjkB2Prud0clax4OV4m2opvTFz_M",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tcnRDn_jpDUm_6lqjkB2Prud0clax4OV4m2opvTFz_M/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "chat_id",
+              "lookupValue": "={{ $item(\"0\").$node[\"Switch\"].json[\"message\"][\"chat\"][\"id\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        80,
+        -340
+      ],
+      "id": "c58e1875-2181-40b8-86e7-da7159974025",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Hc7cKFfnih9aDikz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88c27cc6-ebe7-49a8-a298-b63b128faddc",
+              "name": "chat_id",
+              "value": "={{ $json[\"message\"][\"chat\"][\"id\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "d329813e-ca5b-4ced-b6f5-664b0f165f6b",
+              "name": "data",
+              "value": "={{ $item(\"1\").$node[\"Merge\"].json[\"data\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1400,
+        -40
+      ],
+      "id": "f9bc39df-6e33-4964-86e8-a2c313549beb",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        560,
+        -480
+      ],
+      "id": "e915320b-6e37-4354-955a-46632d40cd1c",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e090fbe-d756-4730-95c6-a265be8b9566",
+              "name": "instruction",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "f8ef2a77-8069-459e-8d25-7e9db8aecaed",
+              "name": "data",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            },
+            {
+              "id": "0a532ec4-e029-4c31-98a2-fda4de10eb9b",
+              "name": "=question",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "afdcfdec-c4e7-4fd6-be4f-1b4bbdccc6b3",
+              "name": "chat_id",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        -480
+      ],
+      "id": "cc7981dc-3fbd-4654-9d12-04cbf25a3b2a",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $json.message.chat.id }}",
+        "message": "سوالت را بفرست",
+        "responseType": "freeText",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        -840
+      ],
+      "id": "925a9056-c324-48ff-81f3-2224361fbf21",
+      "name": "Telegram3",
+      "webhookId": "53f9f0f0-f6b0-46c8-b0ba-6784a709f61a",
+      "credentials": {
+        "telegramApi": {
+          "id": "e6n8nDyW93RogvL9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        -820
+      ],
+      "id": "03062f7e-6929-4d91-a4a7-6e6f4b425730",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a52bcb40-51ba-4a81-9e01-105223a82661",
+              "name": "instruction",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "cf837928-7e6a-430c-8672-e5d49b7edb0a",
+              "name": "data",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            },
+            {
+              "id": "45b891b5-4c76-4aa8-b7f3-76260d428c11",
+              "name": "question",
+              "value": "={{ $json.question }}",
+              "type": "string"
+            },
+            {
+              "id": "647ef859-73e0-476d-8fdc-0bb69b15b639",
+              "name": "chat_id",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        -780
+      ],
+      "id": "9b670437-9f40-4d3c-a756-28f7a8fe702a",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8541a334-5aa8-4f4a-8150-9eaed9189ef5",
+              "name": "question",
+              "value": "={{ $json.data.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        -840
+      ],
+      "id": "90e178ec-6d21-4118-824a-224cc7c5df5c",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        -560
+      ],
+      "id": "5f9dc62c-2eae-41d4-864f-e04014517327",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "usTOfg8h12Ug83rt",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $item(\"1\").$node[\"Merge3\"].json[\"chat_id\"] }}",
+        "text": "={{ $item(\"3\").$node[\"Merge3\"].json[\"output\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2080,
+        -840
+      ],
+      "id": "a41f571d-f672-44d6-899a-b7a6e073ce14",
+      "name": "Telegram4",
+      "webhookId": "adf96c11-ead1-48fd-ab49-e7bbe0ed119a",
+      "credentials": {
+        "telegramApi": {
+          "id": "e6n8nDyW93RogvL9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1660,
+        -840
+      ],
+      "id": "0e1dd08b-c847-41ad-808b-2831126ba9c6",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=شما یک دستیار هوشمند برای پردازش و تحلیل اسناد هستید.\n\nدستور کار:\n{{ $item(\"0\").$node[\"Edit Fields1\"].json[\"instruction\"] }}\n\nمتن کامل سند:\n{{ $item(\"1\").$node[\"Edit Fields1\"].json[\"data\"] }}\n\n\nلطفاً دستور فوق را بر روی محتوای سند اجرا کنید.\n\n\nدر پاسخ خود، نتیجه را به صورت واضح، دقیق و به زبان مناسب ارائه دهید\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        -320
+      ],
+      "id": "6d0f19d1-cb71-4e41-8fdb-ccfe8668948b",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        -280
+      ],
+      "id": "0e4d42db-acac-472b-9391-25143a25c117",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "usTOfg8h12Ug83rt",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tcnRDn_jpDUm_6lqjkB2Prud0clax4OV4m2opvTFz_M",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tcnRDn_jpDUm_6lqjkB2Prud0clax4OV4m2opvTFz_M/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "chat_id",
+              "lookupValue": "={{ $item(\"0\").$node[\"Switch\"].json[\"message\"][\"chat\"][\"id\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        540,
+        -660
+      ],
+      "id": "56e9fe33-ec57-4966-a7b7-78b668ef648e",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Hc7cKFfnih9aDikz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1660,
+        -420
+      ],
+      "id": "f66816b7-1bd4-48ae-bcb4-51c23e7e8997",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2100,
+        -420
+      ],
+      "id": "d5b0bf0b-5f9c-4c9f-8a68-01704509e30b",
+      "name": "Telegram5",
+      "webhookId": "adf96c11-ead1-48fd-ab49-e7bbe0ed119a",
+      "credentials": {
+        "telegramApi": {
+          "id": "e6n8nDyW93RogvL9",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc108219-d6a0-4f7c-aaca-d0ea2f658733",
+              "name": "output",
+              "value": "={{ $item(\"2\").$node[\"Merge4\"].json[\"output\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "1ed50092-78e0-4592-aba8-96fa6e4181eb",
+              "name": "chat_id",
+              "value": "={{ $item(\"0\").$node[\"Merge4\"].json[\"chat_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "chat_id,output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1880,
+        -420
+      ],
+      "id": "20a84742-8f58-44b3-8c31-909eee179ff2",
+      "name": "Edit Fields4",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc108219-d6a0-4f7c-aaca-d0ea2f658733",
+              "name": "output",
+              "value": "={{ $item(\"3\").$node[\"Merge3\"].json[\"output\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "1ed50092-78e0-4592-aba8-96fa6e4181eb",
+              "name": "chat_id",
+              "value": "={{ $item(\"1\").$node[\"Merge3\"].json[\"chat_id\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "chat_id,output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1880,
+        -840
+      ],
+      "id": "5aa5c46f-6195-4b12-8f77-ff3e14640af4",
+      "name": "Edit Fields5",
+      "executeOnce": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "PDFco Api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDFco Api": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Telegram2": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Telegram3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        []
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Telegram5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Telegram4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bd1fbaf7-5eeb-4972-86d0-3b6b0f25a558",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d443a03a2df1376cc064cd13ae0cf39ff49f300b0caf782062cd0067b1283565"
+  },
+  "id": "4zsdigTP6fKbtfwA",
+  "tags": []
+}
