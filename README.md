@@ -52,15 +52,15 @@ A powerful and intelligent Telegram bot powered by **n8n** that allows users to 
 
 ## 📂 Folder Structure
 .
-├── workflows/
-│   └── My_workflow.json  # Main n8n flow
-└── README.md             # This file
+├── workflows/.
+│   └── My_workflow.json  # Main n8n flow.
+└── README.md             # This file.
 
 ## ✅ Use Cases
-Academic research summarization
-Multilingual document processing
-Legal or technical document Q&A
-Lightweight AI assistant for Telegram
+Academic research summarization.
+Multilingual document processing.
+Legal or technical document Q&A.
+Lightweight AI assistant for Telegram.
 
 ## 📝 License
 MIT License
