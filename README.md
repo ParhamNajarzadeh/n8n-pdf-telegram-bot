@@ -35,32 +35,36 @@ A powerful and intelligent Telegram bot powered by **n8n** that allows users to 
 
 ## 🚀 Getting Started
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/telegram-pdf-assistant-n8n.git
-2. Import My_workflow.json into your n8n instance.
-
-3. Set up the following credentials in n8n:
-
-  - Telegram Bot API.
-  - PDF.co API key.
-  - OCR.space API key.
-  - OpenAI API key.
-  - Google Sheets OAuth2 (optional).
-
-4. Deploy and activate the workflow.
+   1. Clone this repository:
+      ```bash
+      git clone https://github.com/YOUR_USERNAME/telegram-pdf-assistant-n8n.git
+   2. Import My_workflow.json into your n8n instance.
+   
+   3. Set up the following credentials in n8n:
+   
+     - Telegram Bot API.
+     - PDF.co API key.
+     - OCR.space API key.
+     - OpenAI API key.
+     - Google Sheets OAuth2 (optional).
+   
+   4. Deploy and activate the workflow.
 
 ## 📂 Folder Structure
-.
-├── workflows/.
-│   └── My_workflow.json  # Main n8n flow.
-└── README.md             # This file.
+   .
+   ├── workflows/.
+   │   └── My_workflow.json  # Main n8n flow.
+   └── README.md             # This file.
+   
+## 🎬 Usage Video
+
+   ![Demo Video](video.mp4)
 
 ## ✅ Use Cases
-Academic research summarization.
-Multilingual document processing.
-Legal or technical document Q&A.
-Lightweight AI assistant for Telegram.
+   - Academic research summarization.
+   - Multilingual document processing.
+   - Legal or technical document Q&A.
+   - Lightweight AI assistant for Telegram.
 
 ## 📝 License
-MIT License
+   MIT License
