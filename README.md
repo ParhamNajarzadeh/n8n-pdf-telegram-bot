@@ -42,11 +42,11 @@ A powerful and intelligent Telegram bot powered by **n8n** that allows users to 
 
 3. Set up the following credentials in n8n:
 
-  .Telegram Bot API
-  .PDF.co API key
-  .OCR.space API key
-  .OpenAI API key
-  .Google Sheets OAuth2 (optional)
+  - Telegram Bot API.
+  - PDF.co API key.
+  - OCR.space API key.
+  - OpenAI API key.
+  - Google Sheets OAuth2 (optional).
 
 4. Deploy and activate the workflow.
 
